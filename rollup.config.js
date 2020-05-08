@@ -3,6 +3,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import alias from "@rollup/plugin-alias";
+import path from "path";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -24,6 +26,14 @@ export default {
 				css.write('public/build/bundle.css');
 			}
 		}),
+		alias({
+			entries: [
+			  {
+				find: "@",
+				replacement: path.resolve(__dirname, "src/")
+			  }
+			]
+		  }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
