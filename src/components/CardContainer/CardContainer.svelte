@@ -1,41 +1,55 @@
 <script>
     import { uuid } from "@/utils/index.js";
-    import Card from "./Card.svelte";
-    export let isFirstElement = false;
+    import Title from "./Title.svelte";
+    import Card from "../Card.svelte";
 
     export let title = "";
-    let customTitle = "";
-    const setCustomTitle = (value) => customTitle = value;
+    export let isFirstElement = false;
 
-    const start = Card;
-    let cards = isFirstElement ? [start] : [];
+    let cards = isFirstElement ? [`card-component-${uuid()}`] : [];
     const updateCards = (update) => cards = [...update];
 
-    function handleDrop(e) {
+    let dropIsActive = false;
+    const handleDrop = (e) => {
         const id = event.dataTransfer.getData('text');
         const draggableElement = document.getElementById(id);
         const dropzone = event.target;
         dropzone.appendChild(draggableElement);
 
         event.dataTransfer.clearData();
+        dropIsActive = false;
     }
+
+    const handleOnDragOver = (e) => {
+         e.preventDefault();
+        dropIsActive = true;
+    };
+
+    const handleOnDragLeave = (e) => {
+         e.preventDefault();
+         dropIsActive = false;
+    };
+
+    const handleRemove = (e) => {
+        const id = e.detail;
+        const current = [...cards];
+        const index = current.indexOf(id);
+
+        if(index > -1) {
+            current.splice(index, 1);
+            updateCards(current);
+        }
+    };
 </script>
 
 <div class="container">
-    <h3 class="title">
-        <input
-            on:input={e => setCustomTitle(e.target.value)}
-            on:dragover={(e) => e.preventDefault()}
-            class="title-input"
-            value={customTitle !== "" ? customTitle : (title ? title : "")}
-            placeholder="title goes here..."/>
-    </h3>
-    <div class="cards" on:dragover={(e) => e.preventDefault()} on:drop="{e => handleDrop(e)}">
-        {#each cards as c, i}
-            <Card id={`card-component-${uuid()}-${i}`}/>
+    <Title title={title} />
+    <div class="cards" class:drop-active="{dropIsActive}"  drop-active="false" on:dragleave={(e) => handleOnDragLeave(e)} on:dragover={(e) => handleOnDragOver(e)} on:drop="{e => handleDrop(e)}">
+        {#each cards as cardID, i (cardID)}
+            <Card id={cardID} on:remove={handleRemove}/>
         {/each}
     </div>
-    <button on:click={(e) => updateCards([...cards, Card])}>New Card...</button>
+    <button on:click={(e) => updateCards([...cards, `card-component-${uuid()}`])}>New Card...</button>
 </div>
 
 <style>
@@ -72,29 +86,18 @@
         animation: pop-in 0.25s ease both;
     }
 
-    .title {
-        display: block;
-        margin: 0 auto;
-        padding: 15px;
-    }
-
-    input {
-        display: block;
-        height: 100%;
-        width: 100%;
-        outline: 0;
-        border: 0;
-        background: transparent;
-    }
-
-    input:focus, input:active, input::-webkit-textfield-decoration-container {
-        outline: 0;
-    }
-
     .cards {
         padding: 15px;
-        min-height: 100px;
+        min-height: 50px;
+        transition: 0.3s all ease;
     }
+
+     .drop-active {
+        display: block;
+        margin: 0 auto;
+        background-color: #a0a0a0;
+        box-shadow:  0px 0px 19px 3px #6f6f6f;
+     }
 
     button {
         display: block;

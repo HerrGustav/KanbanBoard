@@ -1,5 +1,5 @@
 <script>
-	import Stack from "./components/base/Stack.svelte";
+	import Stack from "./components/Stack.svelte";
 	export let name;
 </script>
 

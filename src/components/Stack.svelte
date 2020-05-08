@@ -1,5 +1,5 @@
 <script>
-    import CardContainer from "./CardContainer.svelte";
+    import CardContainer from "./CardContainer/CardContainer.svelte";
 
     let containers = [{ isFirstElement: true, title: "To Do" }];
     const updateContainers = (update) => containers = [...update];
