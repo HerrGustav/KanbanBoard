@@ -41,5 +41,7 @@
 
       button:hover {
         box-shadow: 0px 0px 12px 3px #d8d8d8ee;
+        opacity: 0.8;
+        transform: scale(1.07);
     }
 </style>

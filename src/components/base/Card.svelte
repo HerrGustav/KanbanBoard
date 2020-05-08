@@ -1,21 +1,16 @@
 <script>
-    const placeholder = "Here you can take a note...";
-    let state = {
-        value: "",
-    };
+   import HiddenInput from "./HiddenInput.svelte";
+   export let id;
 
-    const updateState = (update) => { state = {...update}; };
+   const onDrag = (e) => {
+       console.log(e);
+       e.dataTransfer.setData("text/plain", e.target.id);
+   };
 </script>
 
-<section class="card">
+<section id="{id}" class="card" draggable="true" on:dragstart="{e => onDrag(e)}">
     <div class="inner">
-        <input
-            name="area"
-            id="input"
-            placeholder="{placeholder}"
-
-            on:input={(e) => updateState({...state, value: e.target.value})}
-        />
+        <HiddenInput />
     </div>
 </section>
 
@@ -59,6 +54,7 @@
 
     .card:hover {
         box-shadow: 0px 0px 12px 3px #d8d8d8ee;
+        transform: scale(1.02);
     }
 
     .inner {
@@ -66,17 +62,5 @@
         height: 100%;
         align-items: center;
         justify-content: center;
-    }
-
-    input {
-        display: block;
-        height: 100%;
-        width: 100%;
-        outline: 0;
-        border: 0;
-    }
-
-    input:focus, input:active, input::-webkit-textfield-decoration-container {
-        outline: 0;
     }
 </style>

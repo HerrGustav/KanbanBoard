@@ -5,7 +5,9 @@
 
 <main>
 	<h1>Take a note...</h1>
-	<Stack />
+	<div class="stacks">
+		<Stack />
+	</div>
 </main>
 
 <style>
